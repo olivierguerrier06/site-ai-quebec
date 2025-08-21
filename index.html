@@ -1,10 +1,41 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Mon site AI Québec</title>
-  </head>
-  <body>
-    <h1>Bienvenue !</h1>
-    <p>Voici mon premier site web avec GitHub. Je vais parler d’intelligence artificielle au Québec.</p>
-  </body>
+<head>
+  <title>Chatbot IA Québec</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    #chatbox { width: 100%; height: 300px; border: 1px solid #ccc; overflow-y: scroll; padding: 10px; }
+    input, button { margin-top: 10px; width: 100%; padding: 10px; }
+  </style>
+</head>
+<body>
+  <h1>🤖 Chat avec l'IA du Québec</h1>
+  <div id="chatbox"></div>
+  <input type="text" id="userInput" placeholder="Pose ta question ici...">
+  <button onclick="sendMessage()">Envoyer</button>
+
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById("userInput").value;
+      document.getElementById("chatbox").innerHTML += `<p><strong>Toi:</strong> ${input}</p>`;
+      document.getElementById("userInput").value = "";
+
+      const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer TON_CLE_API_ICI"
+        },
+        body: JSON.stringify({
+          model: "gpt-3.5-turbo",
+          messages: [{ role: "user", content: input }]
+        })
+      });
+
+      const data = await response.json();
+      const reply = data.choices[0].message.content;
+      document.getElementById("chatbox").innerHTML += `<p><strong>IA:</strong> ${reply}</p>`;
+    }
+  </script>
+</body>
 </html>
